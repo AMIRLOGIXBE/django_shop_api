@@ -1,0 +1,462 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ورود | حساب کاربری</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'assets/css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/fonts.css' %}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Vazirmatn', Tahoma, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: #0f0f18;
+            overflow-x: hidden;
+        }
+
+        /* ===== Background Animated Orbs ===== */
+        .bg-orbs {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(90px);
+            opacity: 0.55;
+            animation: float 18s ease-in-out infinite;
+        }
+        .orb-1 {
+            width: 420px; height: 420px;
+            background: #ee626b;
+            top: -120px; right: -100px;
+        }
+        .orb-2 {
+            width: 360px; height: 360px;
+            background: #5c4bff;
+            bottom: -120px; left: -100px;
+            animation-delay: -6s;
+        }
+        .orb-3 {
+            width: 280px; height: 280px;
+            background: #00c2ff;
+            top: 45%; left: 40%;
+            animation-delay: -12s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(40px, -30px) scale(1.08); }
+            66% { transform: translate(-30px, 30px) scale(0.95); }
+        }
+
+        /* ===== Layout ===== */
+        .auth-section {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 16px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 460px;
+            background: rgba(30, 30, 42, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 44px 38px;
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(24px) scale(0.98); }
+            to   { opacity: 1; transform: translateY(0)    scale(1); }
+        }
+
+        /* ===== Logo / Icon ===== */
+        .auth-icon {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 22px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #ee626b 0%, #ff8a92 100%);
+            color: #fff;
+            font-size: 28px;
+            box-shadow: 0 12px 30px rgba(238, 98, 107, 0.4);
+        }
+
+        .auth-card h2 {
+            color: #fff;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.6rem;
+            margin: 0 0 8px;
+            letter-spacing: 0.3px;
+        }
+        .auth-card .subtitle {
+            color: #9294a8;
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+
+        /* ===== Form ===== */
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .form-group label {
+            color: #b8bac9;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            display: block;
+            transition: color 0.25s;
+        }
+        .form-group:focus-within label {
+            color: #ee626b;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+        .input-icon {
+            position: absolute;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            color: #6c6e85;
+            font-size: 0.95rem;
+            pointer-events: none;
+            transition: color 0.25s;
+        }
+        .form-group:focus-within .input-icon {
+            color: #ee626b;
+        }
+
+        .auth-card input {
+            width: 100%;
+            background: rgba(15, 15, 24, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 14px 46px 14px 16px;
+            color: #fff;
+            font-size: 0.95rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+        }
+        .auth-card input::placeholder {
+            color: #5c5e75;
+        }
+        .auth-card input:focus {
+            border-color: #ee626b;
+            background: rgba(15, 15, 24, 0.9);
+            box-shadow: 0 0 0 4px rgba(238, 98, 107, 0.15);
+        }
+        .auth-card input:-webkit-autofill {
+            -webkit-text-fill-color: #fff;
+            transition: background-color 9999s ease-in-out 0s;
+        }
+
+        /* Password toggle */
+        .toggle-pass {
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #6c6e85;
+            font-size: 0.95rem;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.25s;
+        }
+        .toggle-pass:hover {
+            color: #ee626b;
+        }
+
+        /* ===== Button ===== */
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #ee626b 0%, #d94f58 100%);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s, filter 0.3s;
+            margin-top: 8px;
+            box-shadow: 0 10px 25px rgba(238, 98, 107, 0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        .btn-submit:hover::before {
+            transform: translateX(100%);
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px rgba(238, 98, 107, 0.45);
+        }
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+        .btn-submit.loading {
+            pointer-events: none;
+            filter: brightness(0.9);
+        }
+        .btn-submit .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .btn-submit.loading .spinner {
+            display: inline-block;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== Divider ===== */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 26px 0;
+            color: #5c5e75;
+            font-size: 0.8rem;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* ===== Bottom link ===== */
+        .bottom-link {
+            text-align: center;
+            color: #9294a8;
+            font-size: 0.9rem;
+        }
+        .bottom-link a {
+            color: #ee626b;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .bottom-link a:hover {
+            color: #ff8a92;
+            text-decoration: none;
+        }
+
+        /* ===== Alerts ===== */
+        .error-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            background: rgba(238, 98, 107, 0.1);
+            border: 1px solid rgba(238, 98, 107, 0.4);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 22px;
+            animation: shake 0.4s;
+        }
+        .error-box i {
+            color: #ff8a92;
+            margin-top: 2px;
+        }
+        .error-box p {
+            color: #ff8a92;
+            margin: 0;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .field-error {
+            color: #ff8a92;
+            font-size: 0.78rem;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 32px 22px;
+                border-radius: 20px;
+            }
+            .auth-card h2 {
+                font-size: 1.35rem;
+            }
+            .auth-icon {
+                width: 58px;
+                height: 58px;
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Orbs -->
+    <div class="bg-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <section class="auth-section">
+        <div class="auth-card">
+
+            <div class="auth-icon">
+                <i class="fa fa-user-lock"></i>
+            </div>
+
+            <h2>ورود به حساب</h2>
+            <p class="subtitle">خوش برگشتی! لطفاً وارد شو</p>
+
+            {% if form.non_field_errors %}
+                <div class="error-box">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <div>
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <form method="post" novalidate id="loginForm">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">
+                        {{ form.username.label|default:"نام کاربری" }}
+                    </label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa fa-user"></i></span>
+                        {{ form.username }}
+                    </div>
+                    {% if form.username.errors %}
+                        <span class="field-error">
+                            <i class="fa fa-circle-exclamation"></i>
+                            {{ form.username.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">
+                        {{ form.password.label|default:"رمز عبور" }}
+                    </label>
+                    <div class="input-wrap">
+                        <span class="input-icon"><i class="fa fa-lock"></i></span>
+                        {{ form.password }}
+                        <button type="button" class="toggle-pass" onclick="togglePassword(this)" aria-label="نمایش رمز">
+                            <i class="fa fa-eye"></i>
+                        </button>
+                    </div>
+                    {% if form.password.errors %}
+                        <span class="field-error">
+                            <i class="fa fa-circle-exclamation"></i>
+                            {{ form.password.errors.0 }}
+                        </span>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <span class="spinner"></span>
+                    <span class="btn-text">
+                        <i class="fa fa-right-to-bracket"></i>
+                        ورود به حساب
+                    </span>
+                </button>
+            </form>
+
+            <div class="divider">یا</div>
+
+            <div class="bottom-link">
+                حساب کاربری نداری؟ <a href="{% url 'signup' %}">ثبت‌نام کن</a>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        function togglePassword(btn) {
+            const input = btn.parentElement.querySelector('input');
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function () {
+            const btn = document.getElementById('submitBtn');
+            btn.classList.add('loading');
+            btn.querySelector('.btn-text').innerHTML =
+                '<i class="fa fa-circle-notch fa-spin"></i> در حال ورود...';
+        });
+    </script>
+
+</body>
+</html>

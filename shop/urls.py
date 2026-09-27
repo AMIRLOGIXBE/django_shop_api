@@ -20,11 +20,13 @@ from django.contrib import admin
 from django.urls import path
 from core.views import *
 from products.views import *
+from accounts.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("contact", contact, name="contact"),
     path("shop", products, name="products"),
     path("detail/<int:pk>", product_detail, name="product_detail"),
-  
+    path("signup",signup,name="signup"),
+    path("login",Login_view,name="login"),
 ]

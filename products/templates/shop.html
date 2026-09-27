@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 
   <head>
 
@@ -8,11 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <title>قالب HTML Lugx - جزئیات محصول</title>
+    <title>فروشگاه | لیست محصولات</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-
 
     <!-- Additional CSS Files -->
     <link rel="stylesheet" href="{% static 'assets/css/fontawesome.css' %}">
@@ -21,10 +20,7 @@
     <link rel="stylesheet" href="{% static 'assets/css/animate.css' %}">
     <link rel="stylesheet" href="{% static 'assets/css/fonts.css' %}">
     <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
-<!--
-https://persian-theme.com
 
--->
   </head>
 
 <body>
@@ -49,16 +45,16 @@ https://persian-theme.com
             <div class="col-12">
                 <nav class="main-nav">
                     <!-- ***** Logo Start ***** -->
-                    <a href="index.html" class="logo">
+                    <a href="/" class="logo">
                         <img src="{% static 'assets/images/logo.png' %}" alt="" style="width: 158px;">
                     </a>
                     <!-- ***** Logo End ***** -->
                     <!-- ***** Menu Start ***** -->
                     <ul class="nav">
-                      <li><a href="index.html">خانه</a></li>
-                      <li><a href="shop.html" class="active">فروشگاه</a></li>
-                      <li><a href="product-details.html">جزئیات محصول</a></li>
-                      <li><a href="contact.html">تماس با ما</a></li>
+                      <li><a href="/">خانه</a></li>
+                      <li><a href="#" class="active">فروشگاه</a></li>
+                      <li><a href="#">جزئیات محصول</a></li>
+                      <li><a href="#">تماس با ما</a></li>
                       <li><a href="#">ورود</a></li>
                   </ul>
                     <a class='menu-trigger'>
@@ -77,7 +73,7 @@ https://persian-theme.com
       <div class="row">
         <div class="col-lg-12">
           <h3>فروشگاه</h3>
-          <span class="breadcrumb"><a href="#">خانه</a> > فروشگاه</span>
+          <span class="breadcrumb"><a href="/">خانه</a> > فروشگاه</span>
         </div>
       </div>
     </div>
@@ -85,20 +81,18 @@ https://persian-theme.com
 
   <div class="section trending">
     <div class="container">
+
       <ul class="trending-filter">
         <li>
           <a class="is_active" href="#!" data-filter="*">مشاهده همه</a>
         </li>
-        <li>
-          <a href="#!" data-filter=".adv">ماجراجویی</a>
-        </li>
-        <li>
-          <a href="#!" data-filter=".str">استراتژی</a>
-        </li>
-        <li>
-          <a href="#!" data-filter=".rac">مسابقه</a>
-        </li>
+        {% for category in categories %}
+          <li>
+            <a href="#!" data-filter=".cat-{{ category.id }}">{{ category.title }}</a>
+          </li>
+        {% endfor %}
       </ul>
+
       <div class="row trending-box">
 
         {% for product in products %}
@@ -107,22 +101,27 @@ https://persian-theme.com
             <div class="item">
               <div class="thumb">
                 <a href="{% url 'product_detail' product.id %}">
-                  {% with first_img=product.images.first %}
-                    {% if first_img %}
-                      <img src="{{ first_img.image.url }}" alt="{{ product.name }}">
-                    {% else %}
-                      <img src="{% static 'assets/images/trending-01.jpg' %}" alt="{{ product.name }}">
-                    {% endif %}
-                  {% endwith %}
+                  {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.title }}">
+                  {% else %}
+                    <img src="{% static 'assets/images/trending-01.jpg' %}" alt="{{ product.title }}">
+                  {% endif %}
                 </a>
               </div>
               <div class="down-content">
                 <span class="category">
-                  {{ product.category.name|default:"محصول" }}
+                  {{ product.category.title }}
                 </span>
                 <h4>
-                  {{ product.name }}
+                  {{ product.title }}
                 </h4>
+                <span class="price">
+                  {% if product.discount_price %}
+                    <em>{{ product.price }}</em> {{ product.discount_price }}
+                  {% else %}
+                    {{ product.price }}
+                  {% endif %}
+                </span>
                 <a href="{% url 'product_detail' product.id %}"><i class="fa fa-shopping-bag"></i></a>
               </div>
             </div>
@@ -139,17 +138,37 @@ https://persian-theme.com
         {% endfor %}
 
       </div>
+
+      {% if products.has_other_pages %}
       <div class="row">
         <div class="col-lg-12">
           <ul class="pagination">
-          <li><a href="#"> &lt; </a></li>
-            <li><a href="#">1</a></li>
-            <li><a class="is_active" href="#">2</a></li>
-            <li><a href="#">3</a></li>
-            <li><a href="#"> &gt; </a></li>
+
+            {% if products.has_previous %}
+              <li><a href="?page={{ products.previous_page_number }}"> &lt; </a></li>
+            {% else %}
+              <li><a href="#!"> &lt; </a></li>
+            {% endif %}
+
+            {% for num in products.paginator.page_range %}
+              {% if products.number == num %}
+                <li><a class="is_active" href="#!">{{ num }}</a></li>
+              {% else %}
+                <li><a href="?page={{ num }}">{{ num }}</a></li>
+              {% endif %}
+            {% endfor %}
+
+            {% if products.has_next %}
+              <li><a href="?page={{ products.next_page_number }}"> &gt; </a></li>
+            {% else %}
+              <li><a href="#!"> &gt; </a></li>
+            {% endif %}
+
           </ul>
         </div>
       </div>
+      {% endif %}
+
     </div>
   </div>
 
@@ -162,7 +181,6 @@ https://persian-theme.com
   </footer>
 
   <!-- Scripts -->
-  <!-- Bootstrap core JavaScript -->
   <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
   <script src="{% static 'assets/js/isotope.min.js' %}"></script>
