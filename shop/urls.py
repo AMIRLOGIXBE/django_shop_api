@@ -27,6 +27,6 @@ urlpatterns = [
     path("contact", contact, name="contact"),
     path("shop", list_products.as_view(), name="products"),
     path("shop/<int:pk>", product_detail.as_view(), name="product_detail"),
-    path("signup",signup,name="signup"),
-    path("login",Login_view,name="login"),
+    # path("signup",signup,name="signup"),
+    # path("login",Login_view,name="login"),
 ]

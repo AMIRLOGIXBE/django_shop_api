@@ -25,6 +25,7 @@ class Product(models.Model):
     slug = models.SlugField(unique=True, verbose_name="اسلاگ")
     description = models.TextField(verbose_name="توضیحات")
     image = models.ImageField(upload_to="products/%Y/%m", verbose_name="تصویر")
+    tavan=models.PositiveIntegerField()
     price = models.PositiveBigIntegerField(verbose_name="قیمت")
     discount_price = models.PositiveBigIntegerField(
         null=True, blank=True, verbose_name="قیمت با تخفیف"

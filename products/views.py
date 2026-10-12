@@ -10,14 +10,6 @@ from .models import Product
 from .serializer import ProductSerializer
 
 
-#
-# def products(request):
-#     products = Product.objects.filter(is_active=True).all()
-#     return render(request, 'shop.html', {'products': products})
-# def product_detail(request,pk):
-#     product=Product.objects.get(pk=pk)
-#     return render(request,'product-details.html',{'product':product})
-
 class list_products(APIView):
     def get(self, request):
         products = Product.objects.all()
@@ -26,5 +18,8 @@ class list_products(APIView):
 class product_detail(APIView):
     def get(self, request,pk):
         product = Product.objects.get(pk=pk)
-        serializer = ProductSerializer(product,context={"request":request})
+        serializer = ProductSerializer(product,many=True,context={"request":request})
         return Response(serializer.data,status=status.HTTP_200_OK)
+
+
+
